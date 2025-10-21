@@ -8,22 +8,97 @@
 import SwiftUI
 
 struct ContentView: View {
-    private let icons: [String] = {
+    
+    @State private var pairCount: Int = 8
+    @State private var resetState: Bool = false
+    @State private var cards: [Card] = []
+    @State private var flippedCards: [Int] = []
+    
+    private func createCard() -> [Card] {
+        _ = resetState
         let base = Icons.mockedIcons
-        return (0..<60).map { base[$0 % base.count] }
-    }()
+        let icon = (0..<pairCount).map { base[$0 % base.count] }
+        var deck = (icon + icon).map { Card(icon: $0) }
+        deck.shuffle()
+        return deck
+    }
+    private func selectCard(at index: Int) {
+        // Game logic to handle card selection
+        guard !cards[index].isFaceUp && !cards[index].isMatched else { return }
+        
+        flippedCards.append(index)
+        cards[index].isFaceUp = true
+        if flippedCards.count == 2 {
+            let firstCard = flippedCards[0]
+            let secondCard = flippedCards[1]
+            
+            if cards[firstCard].icon == cards[secondCard].icon {
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                    cards[firstCard].isMatched = true
+                    
+                    cards[secondCard].isMatched = true
+                }
+            }
+            else{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    cards[firstCard].isFaceUp = false
+                    cards[secondCard].isFaceUp = false
+                }
+            }
+            flippedCards.removeAll()
+        }
+    }
 
     private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
 
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 8) {
-                ForEach(Array(icons.enumerated()), id: \ .offset) { _, icon in
-                    CardView(icon: icon)
+        VStack(spacing: 0) {
+        HStack{
+            Menu{
+                Button("4 pairs"){
+                    pairCount = 4
+                    flippedCards.removeAll()
+                    cards = createCard()
                 }
+                Button("8 pairs"){
+                    pairCount = 8
+                    flippedCards.removeAll()
+                    cards = createCard()
+                }
+
+            } label:{
+                Text("Choose size: \(pairCount) pairs")
+                    .font(.headline)
             }
-            .padding()
+            
+            Spacer()
+            Button(action:{
+                resetState.toggle()
+                flippedCards.removeAll()
+                cards = createCard()
+            }){
+                Text("Reset")
+                    .font(.headline)
+            }}
+        .padding([.horizontal,.top,.bottom])
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 8) {
+                    ForEach(cards.indices, id: \.self) { index in
+                                            CardView(
+                                                icon: cards[index].icon,
+                                                isFaceUp: cards[index].isFaceUp,
+                                                isMatched: cards[index].isMatched,
+                                                onTap: { selectCard(at: index) }
+
+                                            )
+                                        }
+                                }
+                .padding()
+            }
         }
+        .onAppear {
+            cards = createCard()}
     }
 }
 
