@@ -8,14 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    private let icons: [String] = {
+        let base = Icons.mockedIcons
+        return (0..<60).map { base[$0 % base.count] }
+    }()
+
+    private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 8) {
+                ForEach(Array(icons.enumerated()), id: \ .offset) { _, icon in
+                    CardView(icon: icon)
+                }
+            }
+            .padding()
         }
-        .padding()
     }
 }
 

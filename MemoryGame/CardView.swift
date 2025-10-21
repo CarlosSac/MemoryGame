@@ -35,8 +35,9 @@ struct CardView: View {
                 .rotation3DEffect(.degrees(isFaceUp ? 180 : 0), axis: (x: 0, y: 1, z: 0), perspective: 0.6)
                 .opacity(isFaceUp ? 0 : 1)
         }
-        .frame(width: 150, height: 225)
-        .padding()
+        // Use a flexible aspect ratio so the grid columns can size cards to available width
+        .aspectRatio(2/3, contentMode: .fit)
+        .padding(8)
         .contentShape(Rectangle())
         // Animate changes to isFaceUp
         .animation(.spring(response: 0.45, dampingFraction: 0.7), value: isFaceUp)
