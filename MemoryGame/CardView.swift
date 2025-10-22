@@ -28,10 +28,10 @@ struct CardView: View {
                 .rotation3DEffect(.degrees(isFaceUp ? 0 : -180), axis: (x: 0, y: 1, z: 0), perspective: 0.6)
                 .opacity(isFaceUp ? (isMatched ? 0 : 1) : 0)
             
-            Image(systemName: "questionmark.circle.fill")
-                .imageScale(.large)
-                .font(.system(size: 40))
-                .foregroundColor(.white)
+                Image(systemName: "questionmark.circle.fill")
+                    .imageScale(.large)
+                    .font(.system(size: 40))
+                    .foregroundColor(.white)
                 .rotation3DEffect(.degrees(isFaceUp ? 180 : 0), axis: (x: 0, y: 1, z: 0), perspective: 0.6)
                 .opacity(isFaceUp ? 0 : 1)
         }
@@ -39,7 +39,7 @@ struct CardView: View {
         .padding(8)
         .contentShape(Rectangle())
         .animation(.spring(response: 0.45, dampingFraction: 0.7), value: isFaceUp)
-        .animation(.easeOut(duration: 1.0).delay(0.1), value: isMatched)
+        .animation(.easeOut(duration: 0.5), value: isMatched)
         .onTapGesture {
             onTap()
         }
@@ -49,12 +49,12 @@ struct CardView: View {
 struct Icons {
     let icon: String
 
-    static let mockedIcons = ["star.fill", "heart.fill", "circle.fill", "square.fill", "triangle.fill"]
+    static let mockedIcons = ["star.fill", "heart.fill", "circle.fill", "square.fill", "triangle.fill", "diamond.fill", "bolt.fill", "leaf.fill", "cloud.fill", "sun.max.fill", "moon.fill", "flame.fill", "pawprint.fill", "tortoise.fill", "hare.fill", "ant.fill", "ladybug.fill", "fish.fill", "bird.fill", "car.fill", "bicycle", "airplane", "tram.fill", "bus.fill", "train.side.front.car", "ferry.fill",   "bed.double.fill", "fork.knife", "scissors", "paintbrush.fill", "pencil", "book.fill", "graduationcap.fill", "music.note", "guitar.fill", "headphones", "gamecontroller.fill", "tv.fill", "desktopcomputer", "laptopcomputer", "printer.fill", "camera.fill", "mic.fill", "speaker.3.fill"]
 }
 
 #Preview {
     VStack(spacing: 20) {
         CardView(icon: "star.fill", isFaceUp: true, isMatched: false, onTap: {})
-        CardView(icon: "heart.fill", isFaceUp: true, isMatched: true, onTap: {})
+        CardView(icon: "heart.fill", isFaceUp: false, isMatched: false, onTap: {})
     }
 }
