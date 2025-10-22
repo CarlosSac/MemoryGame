@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var pairCount: Int = 8
+    @State private var pairCount: Int = 6
     @State private var resetState: Bool = false
     @State private var cards: [Card] = []
     @State private var flippedCards: [Int] = []
@@ -54,34 +54,47 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-        HStack{
-            Menu{
-                Button("4 pairs"){
-                    pairCount = 4
+            
+            
+            HStack{
+                Menu{
+                    Button("3 pairs"){
+                        pairCount = 3
+                        flippedCards.removeAll()
+                        cards = createCard()
+                    }
+                    Button("6 pairs"){
+                        pairCount = 6
+                        flippedCards.removeAll()
+                        cards = createCard()
+                    }
+                    Button("9 pairs"){
+                        pairCount = 9
+                        flippedCards.removeAll()
+                        cards = createCard()
+                    }
+                    
+                } label:{
+                    Text("Choose size")
+                        .font(.headline)
+                }
+                
+                Spacer()
+                
+                Button(action:{
+                    resetState.toggle()
                     flippedCards.removeAll()
                     cards = createCard()
+                }){
+                    Text("Reset")
+                        .font(.headline)
+                    
                 }
-                Button("8 pairs"){
-                    pairCount = 8
-                    flippedCards.removeAll()
-                    cards = createCard()
-                }
-
-            } label:{
-                Text("Choose size: \(pairCount) pairs")
-                    .font(.headline)
+                
             }
             
-            Spacer()
-            Button(action:{
-                resetState.toggle()
-                flippedCards.removeAll()
-                cards = createCard()
-            }){
-                Text("Reset")
-                    .font(.headline)
-            }}
-        .padding([.horizontal,.top,.bottom])
+        .padding(.horizontal, 20)
+        .padding([.top,.bottom])
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 8) {
                     ForEach(cards.indices, id: \.self) { index in
